@@ -2,6 +2,8 @@
 
 Development environment untuk ERPNext PT Taharica menggunakan Docker.
 
+---
+
 ## Prerequisites
 
 Pastikan Anda sudah menginstall:
@@ -21,7 +23,9 @@ docker compose version
 
 ---
 
-## Quick Start - Development Setup
+## Setup Development Environment
+
+Ikuti langkah-langkah berikut secara berurutan untuk setup ERPNext dari awal.
 
 ### Step 1: Clone Repository
 
@@ -75,43 +79,23 @@ Anda harus melihat 4 container berjalan:
 docker exec -it devcontainer-frappe-1 bash
 ```
 
-### Step 5: Jalankan ERPNext
-
-Di dalam container, jalankan:
-
-```bash
-cd /workspace/development/frappe-bench
-bench start
+Setelah masuk, Anda akan melihat prompt seperti ini:
+```
+frappe@xxxxxxxx:/workspace/development$
 ```
 
-### Step 6: Akses ERPNext
+### Step 5: Inisialisasi Bench dengan Python 3.10
 
-Buka browser dan akses:
-
-- **URL:** http://development.localhost:8000
-- **Username:** `Administrator`
-- **Password:** `admin`
-
----
-
-## Setup Baru (Jika frappe-bench belum ada)
-
-Jika folder `frappe-bench` belum ada atau Anda ingin setup dari awal:
-
-### Step 1: Masuk ke Container
-
-```bash
-docker exec -it devcontainer-frappe-1 bash
-```
-
-### Step 2: Inisialisasi Bench dengan Python 3.10
+Jalankan perintah berikut di dalam container:
 
 ```bash
 cd /workspace/development
 PYENV_VERSION=3.10.13 bench init --skip-redis-config-generation --frappe-branch version-15 frappe-bench
 ```
 
-### Step 3: Konfigurasi Database & Redis
+Tunggu proses ini selesai (bisa memakan waktu beberapa menit).
+
+### Step 6: Konfigurasi Database dan Redis
 
 ```bash
 cd frappe-bench
@@ -121,13 +105,13 @@ bench set-config -g redis_queue redis://redis-queue:6379
 bench set-config -g redis_socketio redis://redis-queue:6379
 ```
 
-### Step 4: Buat Site Baru
+### Step 7: Buat Site Baru
 
 ```bash
 bench new-site --db-root-password 123 --admin-password admin --mariadb-user-host-login-scope=% development.localhost
 ```
 
-### Step 5: Aktifkan Developer Mode
+### Step 8: Aktifkan Developer Mode
 
 ```bash
 bench --site development.localhost set-config developer_mode 1
@@ -135,50 +119,76 @@ bench --site development.localhost clear-cache
 bench use development.localhost
 ```
 
-### Step 6: Install ERPNext
+### Step 9: Download dan Install ERPNext
 
 ```bash
 bench get-app --branch version-15 --resolve-deps erpnext
 bench --site development.localhost install-app erpnext
 ```
 
-### Step 7: Jalankan Server
+Proses ini memakan waktu cukup lama (5-15 menit).
+
+### Step 10: Jalankan ERPNext
 
 ```bash
 bench start
 ```
 
+### Step 11: Akses ERPNext di Browser
+
+Buka browser dan akses:
+
+- **URL:** http://development.localhost:8000
+- **Username:** `Administrator`
+- **Password:** `admin`
+
+Selamat! ERPNext sudah berjalan.
+
 ---
 
-## Perintah Sehari-hari
+## Menjalankan ERPNext (Setelah Setup Selesai)
 
-### Menjalankan ERPNext
+Setelah setup pertama kali selesai, Anda hanya perlu menjalankan langkah-langkah berikut untuk memulai ERPNext:
+
+### Dari Windows/Mac Terminal:
 
 ```bash
-# Dari Windows/Mac terminal:
 cd ERPNextPTTaharica
 docker compose -f .devcontainer/docker-compose.yml up -d
 docker exec -it devcontainer-frappe-1 bash
+```
 
-# Di dalam container:
+### Di Dalam Container:
+
+```bash
 cd /workspace/development/frappe-bench
 bench start
 ```
 
-### Menghentikan Server
+### Akses ERPNext:
+
+- **URL:** http://development.localhost:8000
+- **Username:** `Administrator`
+- **Password:** `admin`
+
+---
+
+## Menghentikan ERPNext
+
+### Menghentikan Server Bench
 
 Tekan `Ctrl+C` di terminal yang menjalankan `bench start`
+
+### Keluar dari Container
+
+```bash
+exit
+```
 
 ### Menghentikan Semua Container
 
 ```bash
 docker compose -f .devcontainer/docker-compose.yml down
-```
-
-### Melihat Log Container
-
-```bash
-docker logs devcontainer-frappe-1
 ```
 
 ---
@@ -198,7 +208,7 @@ Hentikan aplikasi lain yang menggunakan port 8000, atau ubah port di konfigurasi
 
 ### Error "No module named 'frappe'"
 
-Pastikan menggunakan Python 3.10:
+Pastikan menggunakan Python 3.10 saat inisialisasi bench:
 ```bash
 PYENV_VERSION=3.10.13 bench init ...
 ```
@@ -207,14 +217,23 @@ PYENV_VERSION=3.10.13 bench init ...
 
 Gunakan flag `--force`:
 ```bash
-bench new-site --force --db-root-password 123 --admin-password admin development.localhost
+bench new-site --force --db-root-password 123 --admin-password admin --mariadb-user-host-login-scope=% development.localhost
 ```
 
-### Scheduler disabled
+### Scheduler disabled / bench start langsung berhenti
 
 ```bash
 bench --site development.localhost enable-scheduler
 bench start
+```
+
+### frappe-bench folder tidak ditemukan di container
+
+Restart container:
+```bash
+# Dari Windows terminal (bukan di dalam container)
+docker compose -f .devcontainer/docker-compose.yml down
+docker compose -f .devcontainer/docker-compose.yml up -d
 ```
 
 ---
@@ -223,16 +242,32 @@ bench start
 
 ```
 ERPNextPTTaharica/
-├── .devcontainer/          # Konfigurasi Docker dev container
+├── .devcontainer/          # Konfigurasi Docker (copy dari devcontainer-example)
+├── devcontainer-example/   # Template konfigurasi Docker
 ├── development/            # Development environment
-│   ├── frappe-bench/       # Instalasi Frappe & ERPNext
+│   ├── frappe-bench/       # Instalasi Frappe & ERPNext (dibuat saat setup)
 │   │   ├── apps/           # Aplikasi (frappe, erpnext)
 │   │   ├── sites/          # Site configurations
 │   │   └── ...
-│   └── .vscode/            # VS Code debug config
-├── docs/                   # Dokumentasi
+│   ├── .vscode/            # VS Code config (copy dari vscode-example)
+│   └── vscode-example/     # Template VS Code config
+├── docs/                   # Dokumentasi tambahan
 └── README.md               # File ini
 ```
+
+---
+
+## Informasi Default
+
+| Item | Nilai |
+|------|-------|
+| Site Name | development.localhost |
+| Admin Username | Administrator |
+| Admin Password | admin |
+| MariaDB Root Password | 123 |
+| Frappe Version | 15 |
+| ERPNext Version | 15 |
+| Python Version | 3.10.13 |
 
 ---
 
