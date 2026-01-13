@@ -159,7 +159,7 @@ bench get-app --branch version-15 --resolve-deps erpnext
 bench --site development.localhost install-app erpnext
 ```
 
-Proses ini memakan waktu cukup lama (5-15 menit).
+Proses ini memakan waktu cukup panjang (5-15 menit).
 
 ### Step 10: Jalankan ERPNext
 
