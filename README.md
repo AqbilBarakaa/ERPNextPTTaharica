@@ -1,110 +1,225 @@
-# Frappe Docker
+# ERPNext PT Taharica
 
-[![Build Stable](https://github.com/frappe/frappe_docker/actions/workflows/build_stable.yml/badge.svg)](https://github.com/frappe/frappe_docker/actions/workflows/build_stable.yml)
-[![Build Develop](https://github.com/frappe/frappe_docker/actions/workflows/build_develop.yml/badge.svg)](https://github.com/frappe/frappe_docker/actions/workflows/build_develop.yml)
-
-Docker images and orchestration for Frappe applications.
-
-## What is this?
-
-This repository handles the containerization of the Frappe stack, including the application server, database, Redis, and supporting services. It provides quick disposable demo setups, a development environment, production-ready Docker images and compose configurations for deploying Frappe applications including ERPNext.
-
-## Repository Structure
-
-```
-frappe_docker/
-├── docs/                 # Complete documentation
-├── overrides/            # Docker Compose configurations for different scenarios
-├── compose.yaml          # Base Compose File for production setups
-├── pwd.yml               # Single Compose File for quick disposable demo
-├── images/               # Dockerfiles for building Frappe images
-├── development/          # Development environment configurations
-├── devcontainer-example/ # VS Code devcontainer setup
-└── resources/            # Helper scripts and configuration templates
-```
-
-> This section describes the structure of **this repository**, not the Frappe framework itself.
-
-### Key Components
-
-- `docs/` - Canonical documentation for all deployment and operational workflows
-- `overrides/` - Opinionated Compose overrides for common deployment patterns
-- `compose.yaml` - Base compose file for production setups (production)
-- `pwd.yml` - Disposable demo environment (non-production)
-
-## Documentation
-
-**The official documentation for `frappe_docker` is maintained in the `docs/` folder in this repository.**
-
-**New to Frappe Docker?** Read the [Getting Started Guide](docs/getting-started.md) for a comprehensive overview of repository structure, development workflow, custom apps, Docker concepts, and quick start examples.
-
-If you are already familiar with Frappe, you can jump right into the [different deployment methods](docs/01-getting-started/01-choosing-a-deployment-method.md) and select the one best suited to your use case.
+Development environment untuk ERPNext PT Taharica menggunakan Docker.
 
 ## Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose v2](https://docs.docker.com/compose/)
-- [git](https://docs.github.com/en/get-started/getting-started-with-git/set-up-git)
+Pastikan Anda sudah menginstall:
 
-> For Docker basics and best practices refer to Docker's [documentation](http://docs.docker.com)
+1. **Git** - [Download Git](https://git-scm.com/downloads)
+2. **Docker Desktop** - [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
+   - Untuk Windows: Pastikan WSL2 sudah terinstall
+   - Alokasikan minimal **4GB RAM** untuk Docker
 
-## Demo setup
+### Verifikasi Instalasi
 
-The fastest way to try Frappe is to play in an already set up sandbox, in your browser, click the button below:
-
-<a href="https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/frappe/frappe_docker/main/pwd.yml">
-  <img src="https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png" alt="Try in PWD"/>
-</a>
-
-### Try on your environment
-
-> **⚠️ Disposable demo only**
->
-> **This setup is intended for quick evaluation. Expect to throw the environment away.** You will not be able to install custom apps to this setup. For production deployments, custom configurations, and detailed explanations, see the full documentation.
-
-First clone the repo:
-
-```sh
-git clone https://github.com/frappe/frappe_docker
-cd frappe_docker
+```bash
+git --version
+docker --version
+docker compose version
 ```
 
-Then run:
+---
 
-```sh
-docker compose -f pwd.yml up -d
+## 🚀 Quick Start - Development Setup
+
+### Step 1: Clone Repository
+
+```bash
+git clone https://github.com/AqbilBarakaa/ERPNextPTTaharica.git
+cd ERPNextPTTaharica
 ```
 
-Wait for a couple of minutes for ERPNext site to be created or check `create-site` container logs before opening browser on port `8080`. (username: `Administrator`, password: `admin`)
+### Step 2: Start Docker Containers
 
-## Documentation Links
+```bash
+docker compose -f .devcontainer/docker-compose.yml up -d
+```
 
-### [Getting Started Guide](docs/getting-started.md)
+Tunggu hingga semua container berjalan:
+```bash
+docker ps
+```
 
-### [Frequently Asked Questions](https://github.com/frappe/frappe_docker/wiki/Frequently-Asked-Questions)
+Anda harus melihat 4 container berjalan:
+- `devcontainer-frappe-1`
+- `devcontainer-mariadb-1`
+- `devcontainer-redis-cache-1`
+- `devcontainer-redis-queue-1`
 
-### [Getting Started](#getting-started)
+### Step 3: Masuk ke Container
 
-### [Deployment Methods](docs/01-getting-started/01-choosing-a-deployment-method.md)
+```bash
+docker exec -it devcontainer-frappe-1 bash
+```
 
-### [ARM64](docs/01-getting-started/03-arm64.md)
+### Step 4: Jalankan ERPNext
 
-### [Container Setup Overview](docs/02-setup/01-overview.md)
+Di dalam container, jalankan:
 
-### [Development](docs/05-development/01-development.md)
+```bash
+cd /workspace/development/frappe-bench
+bench start
+```
 
-## Contributing
+### Step 5: Akses ERPNext
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Buka browser dan akses:
 
-This repository is only for container related stuff. You also might want to contribute to:
+- **URL:** http://development.localhost:8000
+- **Username:** `Administrator`
+- **Password:** `admin`
 
-## Resources
+---
 
-- [Frappe framework](https://github.com/frappe/frappe),
-- [ERPNext](https://github.com/frappe/erpnext),
-- [Frappe Bench](https://github.com/frappe/bench).
+## 📋 Setup Baru (Jika frappe-bench belum ada)
+
+Jika folder `frappe-bench` belum ada atau Anda ingin setup dari awal:
+
+### Step 1: Masuk ke Container
+
+```bash
+docker exec -it devcontainer-frappe-1 bash
+```
+
+### Step 2: Inisialisasi Bench dengan Python 3.10
+
+```bash
+cd /workspace/development
+PYENV_VERSION=3.10.13 bench init --skip-redis-config-generation --frappe-branch version-15 frappe-bench
+```
+
+### Step 3: Konfigurasi Database & Redis
+
+```bash
+cd frappe-bench
+bench set-config -g db_host mariadb
+bench set-config -g redis_cache redis://redis-cache:6379
+bench set-config -g redis_queue redis://redis-queue:6379
+bench set-config -g redis_socketio redis://redis-queue:6379
+```
+
+### Step 4: Buat Site Baru
+
+```bash
+bench new-site --db-root-password 123 --admin-password admin --mariadb-user-host-login-scope=% development.localhost
+```
+
+### Step 5: Aktifkan Developer Mode
+
+```bash
+bench --site development.localhost set-config developer_mode 1
+bench --site development.localhost clear-cache
+bench use development.localhost
+```
+
+### Step 6: Install ERPNext
+
+```bash
+bench get-app --branch version-15 --resolve-deps erpnext
+bench --site development.localhost install-app erpnext
+```
+
+### Step 7: Jalankan Server
+
+```bash
+bench start
+```
+
+---
+
+## 🔄 Perintah Sehari-hari
+
+### Menjalankan ERPNext
+
+```bash
+# Dari Windows/Mac terminal:
+cd ERPNextPTTaharica
+docker compose -f .devcontainer/docker-compose.yml up -d
+docker exec -it devcontainer-frappe-1 bash
+
+# Di dalam container:
+cd /workspace/development/frappe-bench
+bench start
+```
+
+### Menghentikan Server
+
+Tekan `Ctrl+C` di terminal yang menjalankan `bench start`
+
+### Menghentikan Semua Container
+
+```bash
+docker compose -f .devcontainer/docker-compose.yml down
+```
+
+### Melihat Log Container
+
+```bash
+docker logs devcontainer-frappe-1
+```
+
+---
+
+## ⚠️ Troubleshooting
+
+### Container tidak bisa start
+
+```bash
+docker compose -f .devcontainer/docker-compose.yml down
+docker compose -f .devcontainer/docker-compose.yml up -d
+```
+
+### Port 8000 sudah digunakan
+
+Hentikan aplikasi lain yang menggunakan port 8000, atau ubah port di konfigurasi.
+
+### Error "No module named 'frappe'"
+
+Pastikan menggunakan Python 3.10:
+```bash
+PYENV_VERSION=3.10.13 bench init ...
+```
+
+### Database sudah ada
+
+Gunakan flag `--force`:
+```bash
+bench new-site --force --db-root-password 123 --admin-password admin development.localhost
+```
+
+### Scheduler disabled
+
+```bash
+bench --site development.localhost enable-scheduler
+bench start
+```
+
+---
+
+## 📁 Struktur Folder
+
+```
+ERPNextPTTaharica/
+├── .devcontainer/          # Konfigurasi Docker dev container
+├── development/            # Development environment
+│   ├── frappe-bench/       # Instalasi Frappe & ERPNext
+│   │   ├── apps/           # Aplikasi (frappe, erpnext)
+│   │   ├── sites/          # Site configurations
+│   │   └── ...
+│   └── .vscode/            # VS Code debug config
+├── docs/                   # Dokumentasi
+└── README.md               # File ini
+```
+
+---
+
+## 📞 Informasi Kontak
+
+Untuk pertanyaan teknis, hubungi tim development PT Taharica.
+
+---
 
 ## License
 
-This repository is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This repository is licensed under the MIT License.
