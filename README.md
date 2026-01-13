@@ -8,14 +8,14 @@ Repository ini menangani containerization dari Frappe stack untuk PT Taharica, t
 
 ### Komponen Utama
 
-| Folder | Deskripsi |
-|--------|-----------|
-| `docs/` | Dokumentasi lengkap |
-| `devcontainer-example/` | Template konfigurasi Docker dev container |
-| `development/` | Environment untuk development |
-| `images/` | Dockerfiles untuk building Frappe images |
-| `overrides/` | Docker Compose configurations untuk berbagai skenario |
-| `resources/` | Helper scripts dan configuration templates |
+| Folder                  | Deskripsi                                             |
+| ----------------------- | ----------------------------------------------------- |
+| `docs/`                 | Dokumentasi lengkap                                   |
+| `devcontainer-example/` | Template konfigurasi Docker dev container             |
+| `development/`          | Environment untuk development                         |
+| `images/`               | Dockerfiles untuk building Frappe images              |
+| `overrides/`            | Docker Compose configurations untuk berbagai skenario |
+| `resources/`            | Helper scripts dan configuration templates            |
 
 ---
 
@@ -49,6 +49,7 @@ docker compose -f pwd.yml up -d
 ```
 
 Tunggu beberapa menit, lalu akses http://localhost:8080
+
 - Username: `Administrator`
 - Password: `admin`
 
@@ -72,18 +73,21 @@ cd ERPNextPTTaharica
 Folder konfigurasi tidak ter-track di git, jadi perlu di-copy dari template:
 
 **Windows (Command Prompt):**
+
 ```cmd
 xcopy "devcontainer-example" ".devcontainer" /E /I /Y
 xcopy "development\vscode-example" "development\.vscode" /E /I /Y
 ```
 
 **Windows (PowerShell):**
+
 ```powershell
 Copy-Item -Path "devcontainer-example" -Destination ".devcontainer" -Recurse -Force
 Copy-Item -Path "development\vscode-example" -Destination "development\.vscode" -Recurse -Force
 ```
 
 **Linux/Mac:**
+
 ```bash
 cp -R devcontainer-example .devcontainer
 cp -R development/vscode-example development/.vscode
@@ -96,11 +100,13 @@ docker compose -f .devcontainer/docker-compose.yml up -d
 ```
 
 Tunggu hingga semua container berjalan:
+
 ```bash
 docker ps
 ```
 
 Anda harus melihat 4 container berjalan:
+
 - `devcontainer-frappe-1`
 - `devcontainer-mariadb-1`
 - `devcontainer-redis-cache-1`
@@ -113,6 +119,7 @@ docker exec -it devcontainer-frappe-1 bash
 ```
 
 Setelah masuk, Anda akan melihat prompt seperti ini:
+
 ```
 frappe@xxxxxxxx:/workspace/development$
 ```
@@ -242,6 +249,7 @@ Hentikan aplikasi lain yang menggunakan port 8000, atau ubah port di konfigurasi
 ### Error "No module named 'frappe'"
 
 Pastikan menggunakan Python 3.10 saat inisialisasi bench:
+
 ```bash
 PYENV_VERSION=3.10.13 bench init ...
 ```
@@ -249,6 +257,7 @@ PYENV_VERSION=3.10.13 bench init ...
 ### Database sudah ada
 
 Gunakan flag `--force`:
+
 ```bash
 bench new-site --force --db-root-password 123 --admin-password admin --mariadb-user-host-login-scope=% development.localhost
 ```
@@ -263,6 +272,7 @@ bench start
 ### frappe-bench folder tidak ditemukan di container
 
 Restart container:
+
 ```bash
 # Dari Windows terminal (bukan di dalam container)
 docker compose -f .devcontainer/docker-compose.yml down
@@ -292,15 +302,15 @@ ERPNextPTTaharica/
 
 ## Informasi Default
 
-| Item | Nilai |
-|------|-------|
-| Site Name | development.localhost |
-| Admin Username | Administrator |
-| Admin Password | admin |
-| MariaDB Root Password | 123 |
-| Frappe Version | 15 |
-| ERPNext Version | 15 |
-| Python Version | 3.10.13 |
+| Item                  | Nilai                 |
+| --------------------- | --------------------- |
+| Site Name             | development.localhost |
+| Admin Username        | Administrator         |
+| Admin Password        | admin                 |
+| MariaDB Root Password | 123                   |
+| Frappe Version        | 15                    |
+| ERPNext Version       | 15                    |
+| Python Version        | 3.10.13               |
 
 ---
 
