@@ -30,7 +30,29 @@ git clone https://github.com/AqbilBarakaa/ERPNextPTTaharica.git
 cd ERPNextPTTaharica
 ```
 
-### Step 2: Start Docker Containers
+### Step 2: Copy Konfigurasi Docker dan VSCode
+
+Folder konfigurasi tidak ter-track di git, jadi perlu di-copy dari template:
+
+**Windows (Command Prompt):**
+```cmd
+xcopy "devcontainer-example" ".devcontainer" /E /I /Y
+xcopy "development\vscode-example" "development\.vscode" /E /I /Y
+```
+
+**Windows (PowerShell):**
+```powershell
+Copy-Item -Path "devcontainer-example" -Destination ".devcontainer" -Recurse -Force
+Copy-Item -Path "development\vscode-example" -Destination "development\.vscode" -Recurse -Force
+```
+
+**Linux/Mac:**
+```bash
+cp -R devcontainer-example .devcontainer
+cp -R development/vscode-example development/.vscode
+```
+
+### Step 3: Start Docker Containers
 
 ```bash
 docker compose -f .devcontainer/docker-compose.yml up -d
@@ -47,13 +69,13 @@ Anda harus melihat 4 container berjalan:
 - `devcontainer-redis-cache-1`
 - `devcontainer-redis-queue-1`
 
-### Step 3: Masuk ke Container
+### Step 4: Masuk ke Container
 
 ```bash
 docker exec -it devcontainer-frappe-1 bash
 ```
 
-### Step 4: Jalankan ERPNext
+### Step 5: Jalankan ERPNext
 
 Di dalam container, jalankan:
 
@@ -62,7 +84,7 @@ cd /workspace/development/frappe-bench
 bench start
 ```
 
-### Step 5: Akses ERPNext
+### Step 6: Akses ERPNext
 
 Buka browser dan akses:
 
