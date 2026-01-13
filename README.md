@@ -21,7 +21,7 @@ docker compose version
 
 ---
 
-## 🚀 Quick Start - Development Setup
+## Quick Start - Development Setup
 
 ### Step 1: Clone Repository
 
@@ -72,7 +72,7 @@ Buka browser dan akses:
 
 ---
 
-## 📋 Setup Baru (Jika frappe-bench belum ada)
+## Setup Baru (Jika frappe-bench belum ada)
 
 Jika folder `frappe-bench` belum ada atau Anda ingin setup dari awal:
 
@@ -128,7 +128,7 @@ bench start
 
 ---
 
-## 🔄 Perintah Sehari-hari
+## Perintah Sehari-hari
 
 ### Menjalankan ERPNext
 
@@ -161,7 +161,7 @@ docker logs devcontainer-frappe-1
 
 ---
 
-## ⚠️ Troubleshooting
+## Troubleshooting
 
 ### Container tidak bisa start
 
@@ -197,7 +197,7 @@ bench start
 
 ---
 
-## 📁 Struktur Folder
+## Struktur Folder
 
 ```
 ERPNextPTTaharica/
@@ -211,12 +211,6 @@ ERPNextPTTaharica/
 ├── docs/                   # Dokumentasi
 └── README.md               # File ini
 ```
-
----
-
-## 📞 Informasi Kontak
-
-Untuk pertanyaan teknis, hubungi tim development PT Taharica.
 
 ---
 
