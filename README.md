@@ -2,6 +2,21 @@
 
 Development environment untuk ERPNext PT Taharica menggunakan Docker.
 
+## Apa Ini?
+
+Repository ini menangani containerization dari Frappe stack untuk PT Taharica, termasuk application server, database (MariaDB), Redis, dan supporting services. Repository ini menyediakan development environment untuk mengembangkan dan menjalankan ERPNext.
+
+### Komponen Utama
+
+| Folder | Deskripsi |
+|--------|-----------|
+| `docs/` | Dokumentasi lengkap |
+| `devcontainer-example/` | Template konfigurasi Docker dev container |
+| `development/` | Environment untuk development |
+| `images/` | Dockerfiles untuk building Frappe images |
+| `overrides/` | Docker Compose configurations untuk berbagai skenario |
+| `resources/` | Helper scripts dan configuration templates |
+
 ---
 
 ## Prerequisites
@@ -20,6 +35,24 @@ git --version
 docker --version
 docker compose version
 ```
+
+---
+
+## Quick Demo (Opsional)
+
+Jika Anda hanya ingin mencoba ERPNext dengan cepat tanpa development setup:
+
+```bash
+git clone https://github.com/AqbilBarakaa/ERPNextPTTaharica.git
+cd ERPNextPTTaharica
+docker compose -f pwd.yml up -d
+```
+
+Tunggu beberapa menit, lalu akses http://localhost:8080
+- Username: `Administrator`
+- Password: `admin`
+
+> **Catatan:** Demo ini hanya untuk evaluasi cepat. Untuk development, ikuti langkah-langkah di bawah.
 
 ---
 
@@ -268,6 +301,27 @@ ERPNextPTTaharica/
 | Frappe Version | 15 |
 | ERPNext Version | 15 |
 | Python Version | 3.10.13 |
+
+---
+
+## Dokumentasi Tambahan
+
+Repository ini berbasis [frappe_docker](https://github.com/frappe/frappe_docker). Untuk dokumentasi lebih lanjut:
+
+- [Getting Started Guide](docs/getting-started.md)
+- [Development Documentation](docs/05-development/01-development.md)
+- [Deployment Methods](docs/01-getting-started/01-choosing-a-deployment-method.md)
+- [Container Setup Overview](docs/02-setup/01-overview.md)
+- [Frequently Asked Questions](https://github.com/frappe/frappe_docker/wiki/Frequently-Asked-Questions)
+
+---
+
+## Resources
+
+- [Frappe Framework](https://github.com/frappe/frappe)
+- [ERPNext](https://github.com/frappe/erpnext)
+- [Frappe Bench](https://github.com/frappe/bench)
+- [Docker Documentation](http://docs.docker.com)
 
 ---
 
